@@ -2,7 +2,7 @@
 
 אפליקציית לימוד לצוות יקב בן נון: כרטיסיות לכל בקבוק, הסבר על זני הענבים, היסטוריית היקב, וחידונים.
 
-האתר החי: https://asafyaniv123-dotcom.github.io/binnun-winery/
+האתר החי: https://asafyaniv123-dotcom.github.io/Binnun-Winery/
 
 ## עדכון
 - כל התוכן נמצא ב-`index.html` (רשימת היינות במשתנה `WINES`, הענבים ב-`GRAPES`).
