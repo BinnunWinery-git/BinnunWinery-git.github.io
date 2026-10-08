@@ -89,6 +89,47 @@ dd{margin:0}
 .progress b{display:block;height:100%;background:var(--ok);transition:width .3s}
 .small{font-size:14px;color:var(--muted);text-align:center;margin-top:8px}
 
+/* wine catalog */
+.seg{display:flex;gap:4px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:3px;margin-bottom:14px}
+.seg button{flex:1;border:0;background:transparent;color:var(--muted);font:600 15px "Assistant",sans-serif;padding:8px 4px;border-radius:9px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--surface)}
+.sortbar{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-bottom:6px}
+.sortbar .lbl{color:var(--muted);font-size:14px;margin-left:2px}
+.sortnote{font-size:13.5px;color:var(--muted);margin:2px 0 10px;min-height:1em}
+.grp{font-family:"Frank Ruhl Libre",serif;font-size:19px;font-weight:700;color:var(--wine);margin:18px 2px 8px;display:flex;justify-content:space-between;align-items:baseline}
+.grp small{font-family:"Assistant",sans-serif;font-size:14px;color:var(--muted);font-weight:400}
+.wrow{display:flex;align-items:center;gap:12px;width:100%;text-align:right;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:8px 12px;margin-bottom:8px;cursor:pointer;color:var(--ink);font:inherit}
+.wrow:active{transform:scale(.99)}
+.wrow .thumb{width:40px;height:76px;flex:none;display:flex;align-items:center;justify-content:center}
+.wrow .thumb img{max-height:76px;max-width:40px;object-fit:contain}
+.wrow .thumb svg{height:70px;width:auto}
+.wrow .wmain{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px}
+.wrow .wname{font-family:"Frank Ruhl Libre",serif;font-weight:700;font-size:19px;line-height:1.15;direction:ltr;text-align:right}
+.wrow .wsub{font-size:14px;color:var(--muted)}
+.wrow .wgr{font-size:13.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.wrow .wmet{flex:none;text-align:left;font-family:"Frank Ruhl Libre",serif;font-weight:700;color:var(--wine);font-size:17px;line-height:1.2}
+.wrow .wmet small{display:block;font-family:"Assistant",sans-serif;font-weight:400;font-size:12.5px;color:var(--muted)}
+.meter{display:inline-flex;gap:3px;direction:rtl}
+.meter i{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--line);vertical-align:middle}
+.meter i.on{background:var(--wine)}
+.back-link{all:unset;cursor:pointer;color:var(--wine);font-weight:700;font-size:16px;display:inline-flex;align-items:center;gap:6px;padding:6px 0;margin-bottom:8px}
+.back-link:focus-visible{outline:2px solid var(--oak);outline-offset:3px;border-radius:4px}
+.dhero{display:grid;grid-template-columns:110px 1fr;gap:16px;align-items:center;background:var(--label);border:1px solid var(--oak);border-radius:8px;padding:16px;margin-bottom:14px}
+.dhero .dimg{display:flex;justify-content:center}
+.dhero .dimg img{max-height:230px;max-width:100px;object-fit:contain}
+.dhero .dimg svg{height:200px;width:auto}
+.dhero h2{font-family:"Frank Ruhl Libre",serif;font-weight:900;font-size:clamp(28px,8vw,40px);line-height:1.05;margin:0;direction:ltr;text-align:right}
+.dhero .dhe{font-family:"Frank Ruhl Libre",serif;color:var(--muted);font-size:17px}
+.dhero .dvint{font-family:"Frank Ruhl Libre",serif;font-weight:700;color:var(--wine);font-size:22px;margin-top:6px}
+.dhero .dser{color:var(--muted);font-size:15px}
+.dhero .dprice{font-family:"Frank Ruhl Libre",serif;font-weight:700;font-size:22px;margin-top:8px}
+.facts{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:14px}
+.fact2{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:8px 10px}
+.fact2 span{display:block;font-size:13px;color:var(--muted)}
+.fact2 b{font-size:16px}
+.dsec{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin-bottom:12px}
+.dsec h3{font-family:"Frank Ruhl Libre",serif;font-size:18px;margin:0 0 8px;color:var(--wine)}
+
 /* grape buttons inside a wine card + grape sheet */
 .legend .gbtn{all:unset;display:flex;align-items:center;gap:6px;cursor:pointer;border-bottom:1px dashed var(--muted);padding:1px 0}
 .legend .gbtn:focus-visible{outline:2px solid var(--oak);outline-offset:2px}
@@ -162,6 +203,20 @@ select{width:100%;margin-top:10px;padding:11px 12px;border-radius:10px;border:1p
 
   <!-- WINES -->
   <section id="wines">
+    <div class="seg" id="wineMode">
+      <button data-mode="list" aria-pressed="true">כל היינות</button>
+      <button data-mode="cards" aria-pressed="false">תרגול כרטיסיות</button>
+    </div>
+
+    <div id="wineList">
+      <div class="sortbar" id="sortbar"><span class="lbl">סידור לפי:</span></div>
+      <p class="sortnote" id="sortnote"></p>
+      <div id="rows"></div>
+    </div>
+
+    <div id="wineDetail" class="hidden"></div>
+
+    <div id="wineCards" class="hidden">
     <div class="filter" id="filter"></div>
     <div class="meta"><span id="cardPos"></span><span id="knownCount"></span></div>
     <div class="scene">
@@ -182,6 +237,7 @@ select{width:100%;margin-top:10px;padding:11px 12px;border-radius:10px;border:1p
     <div class="row"><button class="btn primary" id="quizThis">חידון על הבקבוק הזה</button></div>
     <div class="progress"><b id="bar"></b></div>
     <p class="small">הקישו על הכרטיס כדי להפוך אותו</p>
+    </div>
   </section>
 
   <!-- GRAPES -->
@@ -399,6 +455,18 @@ const HISTORY_Q = [
   {q:"מתי הוקם כפר בן נון?",a:"1952",o:["1948","1952","1967","1985"],e:"הכפר שייך למועצה האזורית גזר."}
 ];
 
+/* Body is a 1–5 estimate from the label and website descriptions.
+   age: months in oak; 0 = no oak stated, 1 = tanks only, 99 = oak but length not stated. */
+const META = {
+  rose:{body:1,age:0}, rosesang:{body:1,age:0}, minuet:{body:1,age:0}, chard:{body:2,age:99},
+  marsalis23:{body:3,age:1}, marsalis24:{body:3,age:0}, tango:{body:3,age:12}, chanson:{body:3,age:12},
+  reserve:{body:4,age:12}, ebony:{body:4,age:12}, special:{body:4,age:12}, special21:{body:4,age:18},
+  cuvee:{body:4,age:18}, oscar:{body:4,age:24}, david23:{body:5,age:18}, david19:{body:5,age:18},
+  solomon:{body:5,age:24}, port:{body:0,age:99}
+};
+WINES.forEach(w=>Object.assign(w,META[w.id]||{body:3,age:0}));
+const BODY_LABEL=["יין קינוח","קליל","קליל-בינוני","בינוני","בינוני-מלא","מלא"];
+
 /* ---------- helpers ---------- */
 const $ = id => document.getElementById(id);
 const dup = w => WINES.filter(x=>x.name===w.name).length>1;
@@ -483,6 +551,121 @@ $("next").onclick=()=>step(1); $("prev").onclick=()=>step(-1); $("shuffle").oncl
 $("know").onclick=()=>{if(!deck.length)return;known.add(deck[pos].id);store.set("bn-known",[...known]);if(filter==="todo"){deck.splice(pos,1);if(pos>=deck.length)pos=0;render();}else step(1);};
 $("again").onclick=()=>{if(!deck.length)return;known.delete(deck[pos].id);store.set("bn-known",[...known]);step(1);};
 $("quizThis").onclick=()=>{show("quiz");startQuiz("wine",deck[pos].id);};
+
+/* ---------- wine catalog ---------- */
+const KIND_ORDER={"לבן":0,"רוזה":1,"אדום":2,"קינוח":3};
+const KIND_GROUP=["לבנים","רוזה","אדומים","קינוח"];
+const priceNum=w=>typeof w.price==="number"?w.price:Infinity;
+const ageText=w=>w.age===0?(w.barrel||"לא צוין"):w.age===1?"במכלים, 10–12 ח׳":w.age===99?"בחבית, משך לא צוין":w.age+" חודשים";
+const meter=n=>`<span class="meter" aria-label="${BODY_LABEL[n]}">${[1,2,3,4,5].map(i=>`<i class="${i<=n?"on":""}"></i>`).join("")}</span>`;
+const SORTS={
+  price:{label:"מחיר",note:"מהזול ליקר. יינות בלי מחיר ידוע בסוף.",
+    key:w=>[priceNum(w)],
+    group:w=>w.price==null?"מחיר עוד לא ידוע":w.price<110?"עד 110 ₪":w.price<=170?"110–170 ₪":"מעל 170 ₪",
+    metric:w=>w.price!=null?`${w.price} ₪`:`<small>מחיר</small>לא ידוע`},
+  color:{label:"לבן ← אדום",note:"לבנים, רוזה, אדומים וקינוח. בתוך כל קבוצה מהקליל לעשיר.",
+    key:w=>[KIND_ORDER[w.kind],w.body,priceNum(w)],
+    group:w=>KIND_GROUP[KIND_ORDER[w.kind]],
+    metric:w=>w.price!=null?`${w.price} ₪`:`<small>מחיר</small>לא ידוע`},
+  body:{label:"עומק הטעם",note:"מהקליל לעשיר. הדירוג משוער, לפי תיאורי התוויות והאתר.",
+    key:w=>[w.body===0?9:w.body,priceNum(w)],
+    group:w=>BODY_LABEL[w.body],
+    metric:w=>w.body?`${meter(w.body)}<small>${BODY_LABEL[w.body]}</small>`:`<small>יין קינוח</small>מתוק`},
+  age:{label:"זמן יישון",note:"מהקצר לארוך. \"בחבית, משך לא צוין\" בסוף.",
+    key:w=>[w.age,priceNum(w)],
+    group:w=>w.age===0?"לא צוין יישון בחבית":w.age===1?"התיישן במכלים":w.age===99?"בחבית, משך לא צוין":w.age+" חודשים בחבית",
+    metric:w=>w.age>1&&w.age<99?`${w.age}<small>חודשים</small>`:`<small>${w.age===1?"מכלים":w.age===99?"חבית":"חבית"}</small>${w.age===1?"10–12 ח׳":"לא צוין"}`}
+};
+let sortBy=store.get("bn-sort","color"), sortRev=store.get("bn-sortrev",false), listOrder=[];
+function cmp(a,b){for(let i=0;i<a.length;i++){if(a[i]!==b[i])return a[i]<b[i]?-1:1;}return 0;}
+function buildSortbar(){
+  const bar=$("sortbar"); bar.querySelectorAll("button").forEach(b=>b.remove());
+  Object.entries(SORTS).forEach(([k,v])=>{const c=document.createElement("button");c.className="chip";c.textContent=v.label;c.setAttribute("aria-pressed",sortBy===k);c.onclick=()=>{sortBy=k;sortRev=false;store.set("bn-sort",k);store.set("bn-sortrev",false);buildSortbar();renderList();};bar.appendChild(c);});
+  const r=document.createElement("button");r.className="chip";r.textContent="⇅ הפוך סדר";r.setAttribute("aria-pressed",sortRev);
+  r.onclick=()=>{sortRev=!sortRev;store.set("bn-sortrev",sortRev);buildSortbar();renderList();};bar.appendChild(r);
+}
+function renderList(){
+  const S=SORTS[sortBy];
+  let arr=WINES.slice().sort((a,b)=>cmp(S.key(a),S.key(b)));
+  if(sortRev) arr.reverse();
+  listOrder=arr.map(w=>w.id);
+  $("sortnote").textContent=S.note;
+  let html="", last=null;
+  const counts={}; arr.forEach(w=>{const g=S.group(w);counts[g]=(counts[g]||0)+1;});
+  arr.forEach(w=>{
+    const g=S.group(w);
+    if(g!==last){html+=`<div class="grp">${g}<small>${counts[g]} ${counts[g]===1?"יין":"יינות"}</small></div>`;last=g;}
+    const grapes=w.blend.length?w.blend.slice(0,3).map(([x,p])=>`${p}% ${x}`).join(" · ")+(w.blend.length>3?" …":""):"זנים לא צוינו";
+    html+=`<button class="wrow" data-id="${w.id}">
+      <span class="thumb">${bottle(w)}</span>
+      <span class="wmain"><span class="wname">${w.name} ${w.vintage}</span>
+        <span class="wsub">${w.he?w.he+" · ":""}${w.kind}${w.series&&w.series!==w.kind?" · "+w.series:""}</span>
+        <span class="wgr">${grapes}</span></span>
+      <span class="wmet">${S.metric(w)}</span></button>`;
+  });
+  $("rows").innerHTML=html;
+}
+$("rows").addEventListener("click",e=>{const r=e.target.closest(".wrow");if(r)openWine(r.dataset.id,true);});
+
+let listScroll=0;
+function openWine(id,push){
+  const w=WINES.find(x=>x.id===id); if(!w) return;
+  if(!$("wineDetail").classList.contains("hidden")){} else listScroll=window.scrollY;
+  const i=listOrder.indexOf(id), prev=WINES.find(x=>x.id===listOrder[i-1]), next=WINES.find(x=>x.id===listOrder[i+1]);
+  const legend=w.blend.length?`<div class="blend" aria-hidden="true">${w.blend.map(([g,p])=>`<span style="width:${p}%;background:${GRAPE_COLORS[g]||"#888"}"></span>`).join("")}</div>
+    <ul class="legend">${w.blend.map(([g,p])=>`<li><button class="gbtn" data-g="${g}" aria-label="מה זה ${g}?"><i style="background:${GRAPE_COLORS[g]||"#888"}"></i>${p}% ${g}</button></li>`).join("")}</ul>
+    <p class="gnote">הקישו על זן כדי לקרוא עליו</p>`:`<p class="explain">הזנים לא פורטו.</p>`;
+  const tastes=w.tastes.length?`<div class="tags">${w.tastes.map(t=>`<span class="tag">${t}</span>`).join("")}</div>`:(w.texture||"לא פורט");
+  $("wineDetail").innerHTML=`<button class="back-link" id="backToList">→ חזרה לכל היינות</button>
+    <div class="dhero"><div class="dimg">${bottle(w)}</div>
+      <div><h2>${w.name}</h2>${w.he?`<div class="dhe">${w.he}</div>`:""}
+        <div class="dvint">${w.vintage}</div>
+        <div class="dser">${w.kind}${w.series&&w.series!==w.kind?" · "+w.series:""}</div>
+        <div class="dprice">${priceText(w)}</div></div></div>
+    <div class="facts">
+      <div class="fact2"><span>עומק הטעם</span><b>${w.body?meter(w.body)+" "+BODY_LABEL[w.body]:"יין קינוח"}</b></div>
+      <div class="fact2"><span>יישון</span><b>${ageText(w)}</b></div>
+      <div class="fact2"><span>אלכוהול</span><b>${w.alc||"לא צוין"}</b></div>
+      <div class="fact2"><span>הגשה</span><b>${w.serve||"לא צוין"}</b></div>
+    </div>
+    <div class="dsec"><h3>מה בבקבוק</h3>${legend}</div>
+    <div class="dsec"><h3>טעמים</h3>${tastes}</div>
+    ${w.awards?`<div class="dsec"><h3>פרסים</h3>${w.awards}</div>`:""}
+    <div class="tip">${w.tip}${w.v?" (אומת מול התווית)":""}</div>
+    <div class="row"><button class="btn primary" id="dQuiz">חידון על הבקבוק הזה</button></div>
+    <div class="row">
+      <button class="btn" id="dPrev" ${prev?"":"disabled"}>${prev?"→ "+label(prev):"—"}</button>
+      <button class="btn" id="dNext" ${next?"":"disabled"}>${next?label(next)+" ←":"—"}</button>
+    </div>`;
+  $("wineList").classList.add("hidden"); $("wineDetail").classList.remove("hidden");
+  window.scrollTo({top:0});
+  if(push){ try{history.pushState({bnWine:id},"");}catch(e){} }
+  else { try{history.replaceState({bnWine:id},"");}catch(e){} }
+  $("backToList").onclick=()=>{ if(history.state&&history.state.bnWine) history.back(); else closeWine(); };
+  $("dQuiz").onclick=()=>{show("quiz");startQuiz("wine",w.id);};
+  if(prev) $("dPrev").onclick=()=>openWine(prev.id,false);
+  if(next) $("dNext").onclick=()=>openWine(next.id,false);
+  $("backToList").focus({preventScroll:true});
+}
+function closeWine(){
+  if($("wineDetail").classList.contains("hidden")) return;
+  $("wineDetail").classList.add("hidden"); $("wineList").classList.remove("hidden");
+  window.scrollTo({top:listScroll});
+}
+window.addEventListener("popstate",e=>{
+  const id=e.state&&e.state.bnWine;
+  if(id){ show("wines"); setWineMode("list"); openWine(id,false); } else closeWine();
+});
+$("wineDetail").addEventListener("click",e=>{const b=e.target.closest(".gbtn");if(b)openGrape(b.dataset.g);});
+
+function setWineMode(m){
+  $("wineMode").querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.mode===m));
+  $("wineCards").classList.toggle("hidden",m!=="cards");
+  if(m==="cards"){ $("wineList").classList.add("hidden"); $("wineDetail").classList.add("hidden"); }
+  else { $("wineDetail").classList.add("hidden"); $("wineList").classList.remove("hidden"); }
+  store.set("bn-winemode",m);
+}
+$("wineMode").addEventListener("click",e=>{const b=e.target.closest("button");if(b)setWineMode(b.dataset.mode);});
 
 /* ---------- grapes ---------- */
 const winesWith = g => WINES.filter(w=>w.blend.some(([x])=>x===g));
@@ -652,7 +835,7 @@ $("story").innerHTML=`
   <div class="row"><button class="btn primary" id="quizStory">חידון על היקב</button></div>`;
 $("quizStory").onclick=()=>{show("quiz");startQuiz("story");};
 
-buildFilter(); buildDeck(false);
+buildFilter(); buildDeck(false); buildSortbar(); renderList(); setWineMode(store.get("bn-winemode","list"));
 if ("serviceWorker" in navigator && (location.protocol === "https:" || location.hostname === "localhost")) {
   window.addEventListener("load", () => navigator.serviceWorker.register("sw.js").catch(() => {}));
 }

@@ -1,5 +1,5 @@
 // Bump VERSION whenever index.html changes so phones pick up the update.
-const VERSION = "binnun-v2";
+const VERSION = "binnun-v3";
 const CORE = ["./", "./index.html", "./manifest.webmanifest", "./icon-192.png", "./icon-512.png", "./icon-maskable-512.png", "./apple-touch-icon.png", "./favicon.png"];
 
 self.addEventListener("install", e => {
